@@ -4,12 +4,14 @@
   "description": "Simple app using parcel and pixi",
   "scripts": {
     "dev": "parcel ./src/index.html",
-    "build": "parcel build ./src/index.html"
+    "build": "parcel build ./src/index.html",
+    "test": "jest"
   },
   "main": "index.js",
   "author": "Ivan Martynov",
   "license": "MIT",
   "devDependencies": {
+    "jest": "^27.0.4",
     "parcel-bundler": "^1.12.5"
   },
   "dependencies": {
