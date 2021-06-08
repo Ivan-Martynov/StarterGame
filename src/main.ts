@@ -5,12 +5,9 @@ import * as PIXI from "pixi.js";
 let _app: PIXI.Application;
 
 function main(): void {
-    const randomColor = PIXI.utils.rgb2hex([Math.random(), Math.random(), Math.random()]);
-
     _app = new PIXI.Application({
         width: Math.max(1, window.innerWidth),
         height: Math.max(1, window.innerHeight),
-        backgroundColor: randomColor,
         resolution: devicePixelRatio,
         autoDensity: true,
     });

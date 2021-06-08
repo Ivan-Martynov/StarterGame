@@ -6,8 +6,16 @@ export class GameApp {
 
     constructor(app: PIXI.Application) {
         this._app = app;
+
+        this.changeAppBackgroundColor();
+
+        this._app.renderer.plugins.interaction.on("pointerdown", () => this.changeAppBackgroundColor());
     }
 
     onResize(): void {
+    }
+
+    changeAppBackgroundColor(): void {
+        this._app.renderer.backgroundColor = PIXI.utils.rgb2hex([Math.random(), Math.random(), Math.random()]);
     }
 }
