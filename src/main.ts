@@ -4,26 +4,27 @@ import * as PIXI from "pixi.js";
 // have to keep the app global
 let _app: PIXI.Application;
 
-const WIDTH = 1280;
-const HEIGHT = 720;
+const WIDTH = 720;
+const HEIGHT = 1280;
 
 function main(): void {
     _app = new PIXI.Application({
         width: WIDTH,
         height: HEIGHT,
+        backgroundColor: PIXI.utils.rgb2hex([Math.random(), Math.random(), Math.random()]),
         resolution: devicePixelRatio,
         autoDensity: true,
     });
 
-    document.body.replaceChild(_app.view, document.body.lastElementChild); // hack for parcel HMR
-
-    window.addEventListener('resize', onResize);
+    document.querySelector(".container").appendChild(_app.view);
 
     const gameApp = new GameApp(_app);
-}
 
-function onResize(): void {
-    _app.renderer.resize(window.innerWidth, window.innerHeight);
+    const updateLayout = (): void => { gameApp.onResize(); }
+    
+    window.addEventListener("resize", updateLayout);
+
+    updateLayout();
 }
 
 main();
