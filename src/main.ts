@@ -4,10 +4,13 @@ import * as PIXI from "pixi.js";
 // have to keep the app global
 let _app: PIXI.Application;
 
+const WIDTH = 1280;
+const HEIGHT = 720;
+
 function main(): void {
     _app = new PIXI.Application({
-        width: Math.max(1, window.innerWidth),
-        height: Math.max(1, window.innerHeight),
+        width: WIDTH,
+        height: HEIGHT,
         resolution: devicePixelRatio,
         autoDensity: true,
     });
