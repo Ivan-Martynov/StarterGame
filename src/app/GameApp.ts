@@ -9,5 +9,6 @@ export class GameApp {
     }
 
     onResize(): void {
+        this._app.renderer.resize(window.innerWidth, window.innerHeight);
     }
 }
