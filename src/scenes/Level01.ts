@@ -1,3 +1,4 @@
+import * as PIXI from "pixi.js";
 import { Sprite, Texture } from "pixi.js";
 import { Constants } from "../helpers/Constants";
 import { Ball } from "../classes/Ball";
@@ -28,12 +29,11 @@ export class Level01 extends Scene {
 		this._background.width = Constants.ViewWidth;
 		this._background.height = Constants.ViewHeight;
 		this._background.anchor.set(0.5);
-		this._background.interactive = true;
 		this.addChild(this._background);
 
 		this._board = new GameBoard();
 		this._board.interactive = true;
-		this._board.on('pointerdown', () => this._started = true);
+		this._board.on('pointerdown', this.startBallMovement, this);
 		this.addChild(this._board);
 
 		this._leftPad = new Player(Texture.WHITE, PadPosition.Left);
@@ -52,8 +52,7 @@ export class Level01 extends Scene {
 	}
 
 	startBallMovement(): void {
-		console.log("clicked")
-		this._paused = false;
+		this._started = true;
 	}
 
 	stop(): void {

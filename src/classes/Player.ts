@@ -1,3 +1,4 @@
+import * as PIXI from "pixi.js";
 import { Sprite, Texture } from "pixi.js";
 import { Constants } from "../helpers/Constants";
 import { PadPosition } from "../utils/types";
@@ -5,6 +6,7 @@ import { PadPosition } from "../utils/types";
 export class Player extends Sprite {
     score: number;
     padPosition: PadPosition;
+	private _prevY: number;
 
     constructor(texture: Texture, position: PadPosition) {
         super(texture);
@@ -29,14 +31,16 @@ export class Player extends Sprite {
 
         this.interactive = true;
         this.buttonMode = true;
-        this.on("pointerdown", this.onDragStart)
-            .on("pointerup", this.onDragEnd)
-            .on("pointerupoutside", this.onDragEnd)
-            .on("pointermove", this.onDragMove);
+
+        this.on("pointerdown", this.onDragStart, this)
+            .on("pointerup", this.onDragEnd, this)
+            .on("pointerupoutside", this.onDragEnd, this)
+            .on("pointermove", this.onDragMove, this);
     }
 
     onDragStart(event): void {
         this.data = event.data;
+		this._prevY = this.data.getLocalPosition(this.parent).y;
         this.alpha = 0.9;
         this.dragging = true;
     }
@@ -50,15 +54,9 @@ export class Player extends Sprite {
     onDragMove(): void {
         if (this.dragging) {
             const y: number = this.data.getLocalPosition(this.parent).y;
-            const upperBound = Constants.ViewHeight - this.height;
 
-            if (y <= 0) {
-                this.y = 0;
-            } else if (y >= upperBound) {
-                this.y = upperBound;
-            } else {
-                this.y = y;
-            }
+			this.y = Math.min(Math.max(0, this.y + y - this._prevY), Constants.ViewHeight - this.height);
+			this._prevY = y;
         }
     }
 }

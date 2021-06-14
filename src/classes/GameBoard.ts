@@ -17,4 +17,8 @@ export class GameBoard extends Container {
         );
         this.addChild(this._background);
     }
+
+	setCallBack(cb): void {
+		this._background.on('pointerdown', cb);
+	}
 }
