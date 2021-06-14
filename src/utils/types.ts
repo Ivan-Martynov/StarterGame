@@ -1,4 +1,4 @@
 export enum PadPosition {
-	Left,
-	Right
-};
+    Left,
+    Right,
+}

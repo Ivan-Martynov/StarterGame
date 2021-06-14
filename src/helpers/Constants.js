@@ -1,5 +1,4 @@
-
 export class Constants {
-	static ViewWidth = 1280;
-	static ViewHeight = 720;
+    static ViewWidth = 1280;
+    static ViewHeight = 720;
 }

@@ -1,6 +1,5 @@
 import { Point, Sprite, Texture } from "pixi.js";
 import { Constants } from "../helpers/Constants";
-import { isPortrait } from "../helpers/WindowHelper";
 import { PadPosition } from "../utils/types";
 import { Player } from "./Player";
 
@@ -55,10 +54,10 @@ export class Ball extends Sprite {
 		}
 	}
 
-	collisionWithWalls(upperBound: number): void {
+	collisionWithWalls(): void {
 		if (this.y <= this.radius) {
 			this.velocity.y = -this.velocity.y;
-		} else if (this.y + this.radius >= upperBound) {
+		} else if (this.y + this.radius >= Constants.ViewHeight) {
 			this.velocity.y = -this.velocity.y;
 		}
 	}

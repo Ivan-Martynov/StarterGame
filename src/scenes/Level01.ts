@@ -1,4 +1,4 @@
-import { Point, Sprite, Texture } from "pixi.js";
+import { Sprite, Texture } from "pixi.js";
 import { Constants } from "../helpers/Constants";
 import { Ball } from "../classes/Ball";
 import { Player } from "../classes/Player";
@@ -28,7 +28,6 @@ export class Level01 extends Scene {
 		this._background.width = Constants.ViewWidth;
 		this._background.height = Constants.ViewHeight;
 		this._background.anchor.set(0.5);
-		//this._background.position.set(this._background.width / 2, this._background.height / 2);
 		this._background.interactive = true;
 		this.addChild(this._background);
 
@@ -85,7 +84,7 @@ export class Level01 extends Scene {
 	}
 
 	checkCollisions(): void {
-		this._ball.collisionWithWalls(this._board.height);
+		this._ball.collisionWithWalls();
 
 		if (this._ball.collisionWithPads(this._leftPad, this._rightPad)) {
 			this._started = false;

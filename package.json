@@ -6,7 +6,8 @@
     "dev": "parcel ./src/index.html",
     "build": "parcel build ./src/index.html",
     "test": "jest",
-    "lint": "eslint src/ --ext ts"
+    "lint": "eslint src/ --ext ts",
+	"prettier": "prettier --write src"
   },
   "main": "index.js",
   "author": "Ivan Martynov",
