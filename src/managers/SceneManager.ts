@@ -1,28 +1,54 @@
-import { Scene } from "../scenes/Scene";
+import { Application } from "pixi.js";
+import { IScene } from "../scenes/IScene";
 
 export class SceneManager {
-    private static _scenes = new Map<string, Scene>();
-    private static _currentScene: Scene;
+	private static _currentSceneName: string;
+	private static _currentScene: IScene;
+	private static _scenes = new Map<string, IScene>();
 
-    static createScene(sceneId: string, TScene: new() => Scene = Scene): Scene {
-        if (!this._scenes.has(sceneId)) {
-            this._scenes.set(sceneId, new TScene());
-        }
-        return this._scenes[sceneId];
-    }
+	static add(sceneName: string, scene: IScene): void {
+		if (!sceneName || this.contains(sceneName)) {
+			return;
+		}
 
-    static switchToScene(sceneId: string): boolean {
-        if (this._scenes.has(sceneId)) {
-            if (this._currentScene) {
-                this._currentScene.pause();
-            }
+		this._scenes[sceneName] = scene;
+	}
 
-            this._currentScene = this._scenes[sceneId];
-            this._currentScene.resume();
+	static getScene(sceneName: string): IScene {
+		if (!this.contains(sceneName)) {
+			return null;
+		}
 
-            return true;
-        }
+		return this._scenes[sceneName];
+	}
 
-        return false;
-    }
+	static start(sceneName: string, _app: Application): void {
+		if (!this.contains(sceneName)) {
+			return;
+		}
+
+		this._currentSceneName === sceneName;
+		this._currentScene = this._scenes[sceneName];
+		this._scenes[sceneName].start();
+	}
+
+	static switchToScene(sceneName: string): void {
+		if (!this.contains(sceneName) || sceneName === this._currentSceneName) {
+			return;
+		}
+
+		if (this._currentScene) {
+			this._currentScene.stop();
+		}
+
+		this._currentSceneName = sceneName;
+		this._currentScene = this._scenes[sceneName];
+
+		//this._currentScene.init();
+		this._currentScene.start();
+	}
+
+	static contains(sceneName: string): boolean {
+		return sceneName in this._scenes;
+	}
 }

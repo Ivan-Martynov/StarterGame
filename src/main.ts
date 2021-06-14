@@ -1,30 +1,42 @@
 import { GameApp } from "./app/GameApp";
+import { Constants } from "./helpers/Constants";
 import * as PIXI from "pixi.js";
+import * as WindowHelper from "./helpers/WindowHelper";
 
 // have to keep the app global
 let _app: PIXI.Application;
 
-const WIDTH = 720;
-const HEIGHT = 1280;
+//const WIDTH = 1280;
+//const HEIGHT = 720;
 
 function main(): void {
-    _app = new PIXI.Application({
-        width: WIDTH,
-        height: HEIGHT,
-        backgroundColor: PIXI.utils.rgb2hex([Math.random(), Math.random(), Math.random()]),
-        resolution: devicePixelRatio,
-        autoDensity: true,
-    });
+	_app = new PIXI.Application({
+		width: Constants.ViewWidth,
+		height: Constants.ViewHeight,
+		backgroundColor: 0xFF00FF,
+		resolution: devicePixelRatio,
+		autoDensity: true,
+	});
 
-    document.querySelector(".container").appendChild(_app.view);
+	document.querySelector(".container").appendChild(_app.view);
 
-    const gameApp = new GameApp(_app);
+	const gameApp = new GameApp(_app);
 
-    const updateLayout = (): void => { gameApp.onResize(); }
-    
-    window.addEventListener("resize", updateLayout);
+	_app.renderer.resize(window.innerWidth, window.innerHeight);
+	gameApp.onResize(WindowHelper.isPortrait(_app.screen.width, _app.screen.height), _app.screen.width, _app.screen.height, WindowHelper.getScale(_app.screen.width, _app.screen.height, Constants.ViewWidth, Constants.ViewHeight));
 
-    updateLayout();
+	const updateLayout = (): void => {
+		_app.renderer.resize(window.innerWidth, window.innerHeight);
+		gameApp.onResize(WindowHelper.isPortrait(_app.screen.width, _app.screen.height), _app.screen.width, _app.screen.height, WindowHelper.getScale(_app.screen.width, _app.screen.height, Constants.ViewWidth, Constants.ViewHeight));
+	};
+
+	window.addEventListener("resize", updateLayout);
+
+	_app.ticker.add(() => {
+		const dt = _app.ticker.elapsedMS * 0.001;
+		gameApp.update(dt);
+
+	});
 }
 
 main();
