@@ -1,28 +1,34 @@
+import { Howl } from "howler";
 import { Point, Sprite, Texture } from "pixi.js";
 import { Constants } from "../helpers/Constants";
 import { PadPosition } from "../utils/types";
 import { Player } from "./Player";
 
-export class Ball extends Sprite {
+import bounceSound from "../assets/sounds/bounce.mp3";
 
-	radius: number;
-	velocity: Point;
+export class Ball extends Sprite {
+	private _radius: number;
+	private _velocity: Point;
 	private _speedUp: number;
+
+	private _bounceSound: Howl;
 
 	constructor(texture?: Texture) {
 		super(texture);
 
-		this.radius = 10;
-		this.width = this.radius + this.radius;
-		this.height = this.radius + this.radius;
+		this._radius = 10;
+		this.width = this._radius + this._radius;
+		this.height = this._radius + this._radius;
 		this.anchor.set(0.5);
+
+		this._bounceSound = new Howl({ src: bounceSound });
 
 		this.reset();
 	}
 
 	reset(): void {
 		this.position.set(Constants.ViewWidth / 2, Constants.ViewHeight / 2);
-		this.velocity = new Point(this.randomSpeed(3, 5), this.randomSpeed(3, 5));
+		this._velocity = new Point(this.randomSpeed(3, 5), this.randomSpeed(3, 5));
 		this._speedUp = 0.75;
 	}
 
@@ -33,48 +39,47 @@ export class Ball extends Sprite {
 	}
 
 	move(dt: number): void {
-		const x = this.x + this.velocity.x;
-		const y = this.y + this.velocity.y;
+		const x = this.x + this._velocity.x;
+		const y = this.y + this._velocity.y;
 
 		this.x = x;
 		this.y = y;
 	}
 
 	speedUp(): void {
-		if (this.velocity.x > 0) {
-			this.velocity.x += this._speedUp;
+		if (this._velocity.x > 0) {
+			this._velocity.x += this._speedUp;
 		} else {
-			this.velocity.x -= this._speedUp;
+			this._velocity.x -= this._speedUp;
 		}
 
-		if (this.velocity.y > 0) {
-			this.velocity.y += this._speedUp;
+		if (this._velocity.y > 0) {
+			this._velocity.y += this._speedUp;
 		} else {
-			this.velocity.y -= this._speedUp;
+			this._velocity.y -= this._speedUp;
 		}
 	}
 
-	collisionWithWalls(): void {
-		if (this.y <= this.radius) {
-			this.velocity.y = -this.velocity.y;
-		} else if (this.y + this.radius >= Constants.ViewHeight) {
-			this.velocity.y = -this.velocity.y;
+	collisionWithFloorAndCeiling(): void {
+		if (this.y <= this._radius) {
+			this._velocity.y = -this._velocity.y;
+		} else if (this.y + this._radius >= Constants.ViewHeight) {
+			this._velocity.y = -this._velocity.y;
 		}
 	}
 
-	collisionWithVerticalPad(pad: Player): boolean {
+	verticalPadMissedBall(pad: Player): boolean {
 		let result: boolean;
 
-		if (pad.padPosition === PadPosition.Left) {
-			result = this.x - this.radius <= pad.x + pad.width;
+		if (pad.padPosition === PadPosition.LEFT) {
+			result = this.x - this._radius <= pad.x + pad.width;
 		} else {
-			result = this.x + this.radius >= pad.x;
+			result = this.x + this._radius >= pad.x;
 		}
 
 		if (result) {
 			if (this.y >= pad.y && this.y <= pad.y + pad.height) {
-				this.velocity.x = -this.velocity.x;
-				this.speedUp();
+				this._ballReflectsFromPad();
 				return false;
 			} else {
 				this.reset();
@@ -84,12 +89,20 @@ export class Ball extends Sprite {
 		return result;
 	}
 
-	collisionWithPads(leftPad: Player, rightPad: Player): boolean {
-		if (this.collisionWithVerticalPad(leftPad)) {
-			rightPad.score++;
+	private _ballReflectsFromPad(): void {
+		this._velocity.x = -this._velocity.x;
+
+		this._bounceSound.play();
+
+		this.speedUp();
+	}
+
+	passedPad(leftPad: Player, rightPad: Player): boolean {
+		if (this.verticalPadMissedBall(leftPad)) {
+			rightPad.updateScore();
 			return true;
-		} else if (this.collisionWithVerticalPad(rightPad)) {
-			leftPad.score++;
+		} else if (this.verticalPadMissedBall(rightPad)) {
+			leftPad.updateScore();
 			return true;
 		}
 

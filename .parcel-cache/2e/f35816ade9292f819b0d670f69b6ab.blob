@@ -1,0 +1,34 @@
+var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
+_parcelHelpers.defineInteropFlag(exports);
+_parcelHelpers.export(exports, "SceneManager", function () {
+  return SceneManager;
+});
+var _classesGameController = require("../classes/GameController");
+class SceneManager {
+  static getInstance() {
+    if (this._instance == null) {
+      this._instance = new SceneManager();
+    }
+    return this._instance;
+  }
+  update(dt) {
+    if (this._currentScene != null) {
+      this._currentScene.update(dt);
+    }
+  }
+  resize(isPortrait, width, height, scale) {
+    if (this._currentScene != null) {
+      this._currentScene.resize(isPortrait, width, height, scale);
+    }
+  }
+  static switchToScene(scene) {
+    if (this._instance._currentScene != null) {
+      this._instance._currentScene.unload();
+      _classesGameController.GameController.getInstance().app.stage.removeChild(this._instance._currentScene);
+      this._instance._currentScene.destroy();
+    }
+    scene.load();
+    _classesGameController.GameController.getInstance().app.stage.addChild(scene);
+    this._instance._currentScene = scene;
+  }
+}

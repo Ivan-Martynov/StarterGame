@@ -1,0 +1,36 @@
+var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
+_parcelHelpers.defineInteropFlag(exports);
+_parcelHelpers.export(exports, "PadPosition", function () {
+  return PadPosition;
+});
+_parcelHelpers.export(exports, "SolarizedColor", function () {
+  return SolarizedColor;
+});
+let PadPosition;
+(function (PadPosition) {
+  PadPosition[PadPosition["LEFT"] = 0] = "LEFT";
+  PadPosition[PadPosition["RIGHT"] = 1] = "RIGHT";
+  PadPosition[PadPosition["BOTTOM"] = 2] = "BOTTOM";
+  PadPosition[PadPosition["TOP"] = 3] = "TOP";
+})(PadPosition || (PadPosition = {}));
+;
+let SolarizedColor;
+(function (SolarizedColor) {
+  SolarizedColor[SolarizedColor["BASE03"] = 11062] = "BASE03";
+  SolarizedColor[SolarizedColor["BASE02"] = 472642] = "BASE02";
+  SolarizedColor[SolarizedColor["BASE01"] = 5795445] = "BASE01";
+  SolarizedColor[SolarizedColor["BASE00"] = 6650755] = "BASE00";
+  SolarizedColor[SolarizedColor["BASE0"] = 8623254] = "BASE0";
+  SolarizedColor[SolarizedColor["BASE1"] = 9675169] = "BASE1";
+  SolarizedColor[SolarizedColor["BASE2"] = 15657173] = "BASE2";
+  SolarizedColor[SolarizedColor["BASE3"] = 16643811] = "BASE3";
+  SolarizedColor[SolarizedColor["YELLOW"] = 11897088] = "YELLOW";
+  SolarizedColor[SolarizedColor["ORANGE"] = 13323030] = "ORANGE";
+  SolarizedColor[SolarizedColor["RED"] = 14430767] = "RED";
+  SolarizedColor[SolarizedColor["MAGENTA"] = 13842050] = "MAGENTA";
+  SolarizedColor[SolarizedColor["VIOLET"] = 7107012] = "VIOLET";
+  SolarizedColor[SolarizedColor["BLUE"] = 2526162] = "BLUE";
+  SolarizedColor[SolarizedColor["CYAN"] = 2793880] = "CYAN";
+  SolarizedColor[SolarizedColor["GREEN"] = 8755456] = "GREEN";
+})(SolarizedColor || (SolarizedColor = {}));
+;

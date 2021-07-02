@@ -1,0 +1,28 @@
+var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
+_parcelHelpers.defineInteropFlag(exports);
+_parcelHelpers.export(exports, "SceneBase", function () {
+  return SceneBase;
+});
+var _pixiJs = require("pixi.js");
+var _helpersWindowHelper = require("../helpers/WindowHelper");
+var _GameController = require("./GameController");
+var _helpersConstants = require("../helpers/Constants");
+class SceneBase extends _pixiJs.Container {
+  _origTopLeft = new _pixiJs.Point();
+  _origBottomRight = new _pixiJs.Point();
+  topLeft = new _pixiJs.Point();
+  bottomRight = new _pixiJs.Point();
+  load() {
+    this.resize(_helpersWindowHelper.isPortrait(_GameController.GameController.getInstance().app.screen.width, _GameController.GameController.getInstance().app.screen.height), _GameController.GameController.getInstance().app.screen.width, _GameController.GameController.getInstance().app.screen.height, _helpersWindowHelper.getScale(_GameController.GameController.getInstance().app.screen.width, _GameController.GameController.getInstance().app.screen.height, _helpersConstants.Constants.ViewWidth, _helpersConstants.Constants.ViewHeight));
+  }
+  start() {}
+  unload() {}
+  update(_dt) {}
+  resize(_isPortrait, width, height, scale) {
+    this.scale.set(scale);
+    this._origTopLeft.set(0, 0);
+    this._origBottomRight.set(width, height);
+    this.toLocal(this._origTopLeft, null, this.topLeft, false);
+    this.toLocal(this._origBottomRight, null, this.bottomRight, false);
+  }
+}

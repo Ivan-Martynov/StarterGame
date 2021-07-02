@@ -1,49 +1,85 @@
 import * as PIXI from "pixi.js";
-import { SceneManager } from "../managers/SceneManager";
-import { Scene } from "./Scene";
+import { GameController } from "../classes/GameController";
+import { SceneBase } from "../classes/SceneBase";
+import { Constants } from "../helpers/Constants";
+import { SolarizedColor } from "../utils/types";
 
-export class EndScene extends Scene {
-    box: PIXI.Sprite;
-    text: PIXI.Text;
+export class EndScene extends SceneBase {
+	private _background: PIXI.Sprite;
+	private _buttonContainer: PIXI.Container;
+	private _box: PIXI.Sprite;
+	private _gameEndText: PIXI.Text;
+	private _text: PIXI.Text;
 
-    constructor() {
-        super();
-        this.init();
-    }
+	constructor() {
+		super();
 
-    init(): void {
-        this.box = new PIXI.Sprite(PIXI.Texture.WHITE);
-        this.box.tint = 0x0000ff;
-        this.box.position.set(100, 100);
-        this.box.width = 250;
-        this.box.height = 300;
-        this.box.interactive = true;
-        this.box.on("pointerdown", this.switchToMenuScene);
-        this.addChild(this.box);
+		this._background = new PIXI.Sprite(PIXI.Texture.WHITE);
+		this._background.tint = SolarizedColor.BASE0;
+		this._background.width = Constants.ViewWidth;
+		this._background.height = Constants.ViewHeight;
+		this.addChild(this._background);
 
-        this.text = new PIXI.Text(
-            "End",
-            new PIXI.TextStyle({
-                fontWeight: "bold",
-                fontSize: 48,
-            })
-        );
-        this.text.tint = 0x000000;
-        this.text.position.set(300, 300);
-        this.text.anchor.set(0.5);
+		this._gameEndText = new PIXI.Text('The End',
+			new PIXI.TextStyle({
+				fontWeight: 'bolder',
+				fontSize: 36,
+				fill: SolarizedColor.BASE02
+			})
+		);
+		this._gameEndText.anchor.set(0.5);
+		this.addChild(this._gameEndText);
 
-        this.addChild(this.text);
-    }
+		this._createButton();
+	}
 
-    start(): void {
-        super.start();
-    }
+	private _createButton(): void {
+		this._buttonContainer = new PIXI.Container();
+		this.addChild(this._buttonContainer);
 
-    stop(): void {
-        super.stop();
-    }
+		this._box = new PIXI.Sprite(PIXI.Texture.WHITE);
+		this._box.tint = SolarizedColor.VIOLET;
+		this._box.width = 250;
+		this._box.height = 50;
+		this._box.anchor.set(0.5);
+		this._box.interactive = true;
+		this._box.buttonMode = true;
+		this._box.on('pointerdown', this._switchToScene);
+		this._buttonContainer.addChild(this._box);
 
-    switchToMenuScene(): void {
-        SceneManager.switchToScene("menu");
-    }
+		this._text = new PIXI.Text('To main menu',
+			new PIXI.TextStyle({
+				fontWeight: 'bold',
+				fontSize: 32,
+				fill: SolarizedColor.BASE02
+			})
+		);
+		this._text.anchor.set(0.5);
+		this._buttonContainer.addChild(this._text);
+
+		this._buttonContainer.position.set(Constants.ViewWidth / 2, Constants.ViewHeight / 2 - this._box.height);
+	}
+
+	load(): void {
+		super.load();
+	}
+
+	private _switchToScene(): void {
+		GameController.getInstance().reset();
+	}
+
+	resize(isPortrait: boolean, width: number, height: number, scale: number): void {
+		super.resize(isPortrait, width, height, scale);
+
+		const w = this.bottomRight.x - this.topLeft.x;
+		const h = this.bottomRight.y - this.topLeft.y;
+		const middleX = w / 2;
+		const middleY = h / 2;
+
+		this._background.width = w;
+		this._background.height = h;
+
+		this._gameEndText.position.set(middleX, middleY - this._gameEndText.height);
+		this._buttonContainer.position.set(middleX, middleY + this._box.height);
+	}
 }

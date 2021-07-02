@@ -1,0 +1,1 @@
+import button_simple from "../assets/images/gui_objects/button_simple.png";

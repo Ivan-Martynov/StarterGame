@@ -1,0 +1,35 @@
+var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
+_parcelHelpers.defineInteropFlag(exports);
+_parcelHelpers.export(exports, "GameController", function () {
+  return GameController;
+});
+var _pixiJs = require("pixi.js");
+var _managersSceneManager = require("../managers/SceneManager");
+var _scenesMenuScene = require("../scenes/MenuScene");
+class GameController {
+  constructor(app) {
+    GameController._instance = this;
+    this.app = app;
+    this.reset();
+  }
+  reset() {
+    this.app.stage.removeChildren();
+    this._gameContainer = new _pixiJs.Container();
+    this.app.stage.addChild(this._gameContainer);
+    _managersSceneManager.SceneManager.getInstance();
+    this._startNewGame();
+  }
+  _startNewGame() {
+    _managersSceneManager.SceneManager.switchToScene(new _scenesMenuScene.MenuScene());
+  }
+  static getInstance() {
+    return this._instance;
+  }
+  onResize(isPortrait, width, height, scale) {
+    this._gameContainer.scale.set(scale);
+    _managersSceneManager.SceneManager.getInstance().resize(isPortrait, width, height, scale);
+  }
+  update(dt) {
+    _managersSceneManager.SceneManager.getInstance().update(dt);
+  }
+}

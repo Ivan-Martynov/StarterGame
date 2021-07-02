@@ -1,0 +1,32 @@
+var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
+_parcelHelpers.defineInteropFlag(exports);
+_parcelHelpers.export(exports, "GetSprite", function () {
+  return GetSprite;
+});
+_parcelHelpers.export(exports, "GetSound", function () {
+  return GetSound;
+});
+var _imagesGui_objectsPng = require('./images/gui_objects/*.png');
+var _imagesGui_objectsPngDefault = _parcelHelpers.interopDefault(_imagesGui_objectsPng);
+var _imagesGame_objectsPng = require('./images/game_objects/*.png');
+var _imagesGame_objectsPngDefault = _parcelHelpers.interopDefault(_imagesGame_objectsPng);
+var _soundsMp = require('sounds/*.mp3');
+var _soundsMpDefault = _parcelHelpers.interopDefault(_soundsMp);
+var _pixiJs = require('pixi.js');
+var _howler = require('howler');
+const spriteNames = {
+  button_simple: Object.values(_imagesGui_objectsPngDefault.default),
+  game_objects: Object.values(_imagesGame_objectsPngDefault.default)
+};
+const soundNames = {
+  example: Object.values(_soundsMpDefault.default)
+};
+function GetSprite(name) {
+  console.log(spriteNames[name]);
+  return _pixiJs.Sprite.from(spriteNames[name][0]);
+}
+function GetSound(name) {
+  return new _howler.Howl({
+    src: soundNames[name][0]
+  });
+}

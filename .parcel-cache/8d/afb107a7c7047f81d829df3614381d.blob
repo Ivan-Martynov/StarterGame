@@ -1,0 +1,14 @@
+var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
+_parcelHelpers.defineInteropFlag(exports);
+_parcelHelpers.export(exports, "isPortrait", function () {
+  return isPortrait;
+});
+_parcelHelpers.export(exports, "getScale", function () {
+  return getScale;
+});
+const isPortrait = (width, height) => {
+  return width * 3 < height * 4;
+};
+const getScale = (width, height, fixedWidth, fixedHeight) => {
+  return Math.min(width / fixedWidth, height / fixedHeight);
+};

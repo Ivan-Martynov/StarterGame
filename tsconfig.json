@@ -1,26 +1,26 @@
 {
-    "compilerOptions": {
-        "module": "commonjs",
-        "moduleResolution": "node",
-        "outDir": "./dist/",
-        "target": "es6",
-        "sourceMap": true,
-        "allowJs": true,
-        "lib": [
-            "es2017",
-            "dom"
-        ],
-        "typeRoots": [
-            "node_modules/@types"
-        ]
-    },
-    "include": [
-        "src/**/*.ts",
-        "node_modules/@types"
-    ],
-    "exclude": [
-        ".git",
-        "dist",
-        "node_modules"
-    ]
+	"compilerOptions": {
+		"esModuleInterop": true,
+		"target": "ESNext",
+		"module": "ESNext",
+		"sourceMap": true,
+		"allowJs": true,
+		"strict": false,
+		"moduleResolution": "node",
+		"lib": [
+			"ESNext",
+			"DOM"
+		],
+		"typeRoots": [
+			"node_modules/@types"
+		]
+	},
+	"include": [
+		"src/**/*"
+	],
+	"exclude": [
+		".git",
+		"dist",
+		"node_modules"
+	]
 }

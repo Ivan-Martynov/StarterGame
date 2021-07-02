@@ -1,66 +1,70 @@
 import * as PIXI from "pixi.js";
+import { SceneBase } from "../classes/SceneBase";
+import { Constants } from "../helpers/Constants";
 import { SceneManager } from "../managers/SceneManager";
-import { Scene } from "./Scene";
+import { GameScene } from "./GameScene";
+import { SolarizedColor } from "../utils/types";
+import buttonImage from "../assets/images/gui_objects/button_simple.png";
 
-export class MenuScene extends Scene {
-    box: PIXI.Sprite;
-    text: PIXI.Text;
+export class MenuScene extends SceneBase {
+	private _background: PIXI.Sprite;
+	private _buttonContainer: PIXI.Container;
+	private _box: PIXI.Sprite;
+	private _text: PIXI.Text;
 
-    constructor() {
-        super();
-    }
+	constructor() {
+		super();
 
-    init(): void {
-        this.box = new PIXI.Sprite(PIXI.Texture.WHITE);
-        this.box.tint = 0x0000ff;
-        this.box.width = 150;
-        this.box.height = 30;
-        //this.box.position.set(700, 1200);
-        this.box.anchor.set(0.5);
-        this.box.interactive = true;
-        this.box.on("pointerdown", this.switchToEndScene);
-        this.addChild(this.box);
+		this._background = new PIXI.Sprite(PIXI.Texture.WHITE);
+		this._background.tint = SolarizedColor.BASE0;
+		this._background.width = Constants.ViewWidth;
+		this._background.height = Constants.ViewHeight;
+		this.addChild(this._background);
 
-        this.text = new PIXI.Text(
-            "Start",
-            new PIXI.TextStyle({
-                fontWeight: "bold",
-                fontSize: 40,
-                fill: 0xffffff,
-            })
-        );
-        this.text.anchor.set(0.5);
-        this.text.position.set(300, 300);
+		this._createButton();
+	}
 
-        this.addChild(this.text);
-    }
+	private _createButton(): void {
+		this._buttonContainer = new PIXI.Container();
+		this._buttonContainer.position.set(Constants.ViewWidth / 2, Constants.ViewHeight / 2);
+		this.addChild(this._buttonContainer);
 
-    start(): void {
-        super.start();
-    }
+		this._box = PIXI.Sprite.from(buttonImage);
+		this._box.anchor.set(0.5);
+		this._box.interactive = true;
+		this._box.buttonMode = true;
+		this._box.on('pointerdown', this._switchToScene);
+		this._buttonContainer.addChild(this._box);
 
-    stop(): void {
-        super.stop();
-    }
+		this._text = new PIXI.Text('Start',
+			new PIXI.TextStyle({
+				fontWeight: 'bold',
+				fontSize: 36,
+				fill: SolarizedColor.BASE00
+			})
+		);
+		this._text.anchor.set(0.5);
+		this._buttonContainer.addChild(this._text);
+	}
 
-    switchToEndScene(): void {
-        SceneManager.switchToScene("game");
-    }
+	load(): void {
+		super.load();
+	}
 
-    resize(
-        isPortrait: boolean,
-        width: number,
-        height: number,
-        scale: number
-    ): void {
-        super.resize(isPortrait, width, height, scale);
+	private _switchToScene(): void {
+		SceneManager.switchToScene(new GameScene());
+	}
 
-        const w = this.bottomRight.x - this.topLeft.x;
-        const h = this.bottomRight.y - this.topLeft.y;
-        const middleX = w / 2;
-        const middleY = h / 2;
+	resize(isPortrait: boolean, width: number, height: number, scale: number): void {
+		super.resize(isPortrait, width, height, scale);
 
-        this.box.position.set(middleX, middleY);
-        this.text.position.set(middleX, middleY);
-    }
+		const w = this.bottomRight.x - this.topLeft.x;
+		const h = this.bottomRight.y - this.topLeft.y;
+		const middleX = w / 2;
+		const middleY = h / 2;
+
+		this._background.width = w;
+		this._background.height = h;
+		this._buttonContainer.position.set(middleX, middleY);
+	}
 }

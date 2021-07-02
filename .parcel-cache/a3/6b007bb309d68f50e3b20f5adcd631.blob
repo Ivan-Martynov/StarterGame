@@ -1,0 +1,20 @@
+var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
+_parcelHelpers.defineInteropFlag(exports);
+_parcelHelpers.export(exports, "GameBoard", function () {
+  return GameBoard;
+});
+var _pixiJs = require("pixi.js");
+var _helpersConstants = require("../helpers/Constants");
+var _utilsTypes = require("../utils/types");
+class GameBoard extends _pixiJs.Container {
+  constructor() {
+    super();
+    this._background = new _pixiJs.Sprite(_pixiJs.Texture.WHITE);
+    this._background.tint = _utilsTypes.SolarizedColor.BLUE;
+    this._background.width = _helpersConstants.Constants.ViewWidth;
+    this._background.height = _helpersConstants.Constants.ViewHeight;
+    this._background.anchor.set(0.5);
+    this._background.position.set(this._background.width / 2, this._background.height / 2);
+    this.addChild(this._background);
+  }
+}

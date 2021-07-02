@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, minimum-scale=1, width=device-width, height=device-height">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <title>Simple PIXI App</title>
+
+        <link rel="stylesheet" type="text/css" href="aabf95bf9d3d335c3b7e67f57fad74e8">
+    </head>
+
+    <body>
+        <div class="container"></div>
+        <script src="9afe726a95cef72903da9f429bb785df"></script>
+    </body>
+</html>

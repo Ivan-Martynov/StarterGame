@@ -1,0 +1,87 @@
+var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
+_parcelHelpers.defineInteropFlag(exports);
+_parcelHelpers.export(exports, "Ball", function () {
+  return Ball;
+});
+var _pixiJs = require("pixi.js");
+var _assetsLoader = require("../assets/loader");
+var _helpersConstants = require("../helpers/Constants");
+var _utilsTypes = require("../utils/types");
+class Ball extends _pixiJs.Sprite {
+  constructor(texture) {
+    super(texture);
+    this._radius = 10;
+    this.width = this._radius + this._radius;
+    this.height = this._radius + this._radius;
+    this.anchor.set(0.5);
+    this._bounceSound = _assetsLoader.GetSound("example");
+    this.reset();
+  }
+  reset() {
+    this.position.set(_helpersConstants.Constants.ViewWidth / 2, _helpersConstants.Constants.ViewHeight / 2);
+    this._velocity = new _pixiJs.Point(this.randomSpeed(3, 5), this.randomSpeed(3, 5));
+    this._speedUp = 0.75;
+  }
+  randomSpeed(minValue, maxValue) {
+    const isPositive = Math.random() > 0.5;
+    const randomValue = minValue + Math.random() * (maxValue - minValue);
+    return isPositive ? randomValue : -randomValue;
+  }
+  move(dt) {
+    const x = this.x + this._velocity.x;
+    const y = this.y + this._velocity.y;
+    this.x = x;
+    this.y = y;
+  }
+  speedUp() {
+    if (this._velocity.x > 0) {
+      this._velocity.x += this._speedUp;
+    } else {
+      this._velocity.x -= this._speedUp;
+    }
+    if (this._velocity.y > 0) {
+      this._velocity.y += this._speedUp;
+    } else {
+      this._velocity.y -= this._speedUp;
+    }
+  }
+  collisionWithFloorAndCeiling() {
+    if (this.y <= this._radius) {
+      this._velocity.y = -this._velocity.y;
+    } else if (this.y + this._radius >= _helpersConstants.Constants.ViewHeight) {
+      this._velocity.y = -this._velocity.y;
+    }
+  }
+  verticalPadMissedBall(pad) {
+    let result;
+    if (pad.padPosition === _utilsTypes.PadPosition.LEFT) {
+      result = this.x - this._radius <= pad.x + pad.width;
+    } else {
+      result = this.x + this._radius >= pad.x;
+    }
+    if (result) {
+      if (this.y >= pad.y && this.y <= pad.y + pad.height) {
+        this._ballReflectsFromPad();
+        return false;
+      } else {
+        this.reset();
+      }
+    }
+    return result;
+  }
+  _ballReflectsFromPad() {
+    this._velocity.x = -this._velocity.x;
+    this._bounceSound.play();
+    this.speedUp();
+  }
+  passedPad(leftPad, rightPad) {
+    if (this.verticalPadMissedBall(leftPad)) {
+      rightPad.updateScore();
+      return true;
+    } else if (this.verticalPadMissedBall(rightPad)) {
+      leftPad.updateScore();
+      return true;
+    }
+    return false;
+  }
+}

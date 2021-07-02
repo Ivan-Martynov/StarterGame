@@ -1,0 +1,57 @@
+var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
+_parcelHelpers.defineInteropFlag(exports);
+_parcelHelpers.export(exports, "MenuScene", function () {
+  return MenuScene;
+});
+var _pixiJs = require("pixi.js");
+var _classesSceneBase = require("../classes/SceneBase");
+var _helpersConstants = require("../helpers/Constants");
+var _managersSceneManager = require("../managers/SceneManager");
+var _assetsLoader = require("../assets/loader");
+var _GameScene = require("./GameScene");
+var _utilsTypes = require("../utils/types");
+class MenuScene extends _classesSceneBase.SceneBase {
+  constructor() {
+    super();
+    this._background = new _pixiJs.Sprite(_pixiJs.Texture.WHITE);
+    this._background.tint = _utilsTypes.SolarizedColor.BASE0;
+    this._background.width = _helpersConstants.Constants.ViewWidth;
+    this._background.height = _helpersConstants.Constants.ViewHeight;
+    this.addChild(this._background);
+    this._createButton();
+  }
+  _createButton() {
+    this._buttonContainer = new _pixiJs.Container();
+    this._buttonContainer.position.set(_helpersConstants.Constants.ViewWidth / 2, _helpersConstants.Constants.ViewHeight / 2);
+    this.addChild(this._buttonContainer);
+    this._box = _assetsLoader.GetSprite("button_simple");
+    this._box.anchor.set(0.5);
+    this._box.interactive = true;
+    this._box.buttonMode = true;
+    this._box.on('pointerdown', this._switchToScene);
+    this._buttonContainer.addChild(this._box);
+    this._text = new _pixiJs.Text('Start', new _pixiJs.TextStyle({
+      fontWeight: 'bold',
+      fontSize: 36,
+      fill: _utilsTypes.SolarizedColor.BASE00
+    }));
+    this._text.anchor.set(0.5);
+    this._buttonContainer.addChild(this._text);
+  }
+  load() {
+    super.load();
+  }
+  _switchToScene() {
+    _managersSceneManager.SceneManager.switchToScene(new _GameScene.GameScene());
+  }
+  resize(isPortrait, width, height, scale) {
+    super.resize(isPortrait, width, height, scale);
+    const w = this.bottomRight.x - this.topLeft.x;
+    const h = this.bottomRight.y - this.topLeft.y;
+    const middleX = w / 2;
+    const middleY = h / 2;
+    this._background.width = w;
+    this._background.height = h;
+    this._buttonContainer.position.set(middleX, middleY);
+  }
+}

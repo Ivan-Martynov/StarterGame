@@ -1,0 +1,37 @@
+{
+    "compilerOptions": {
+		"noImplicitAny": false,
+		"noEmitOnError": false,
+		"removeComments": true,
+		"importHelpers": true,
+		"esModuleInterop": true,
+        "module": "ESNext",
+		"strict": true,
+		"allowSyntheticDefaultImports": true,
+        "moduleResolution": "node",
+		"baseUrl": "./src",
+		"paths": {
+			"~/*": ["./"]
+		},
+        "outDir": "./dist/",
+        "target": "esnext",
+        "sourceMap": true,
+        "allowJs": true,
+        "lib": [
+            "ESNext",
+            "DOM"
+        ],
+        "typeRoots": [
+            "node_modules/@types"
+        ]
+    },
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": [
+        ".git",
+        "dist",
+        "node_modules",
+		"src/index.js"
+    ]
+}

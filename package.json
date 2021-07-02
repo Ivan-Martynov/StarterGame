@@ -1,36 +1,26 @@
 {
-  "name": "try_parcel",
-  "version": "1.0.0",
-  "description": "Simple app using parcel and pixi",
-  "scripts": {
-    "dev": "parcel ./src/index.html",
-    "build": "parcel build ./src/index.html",
-    "test": "jest",
-    "lint": "eslint src/ --ext ts",
-    "prettier": "prettier --write src"
-  },
-  "main": "index.js",
-  "author": "Ivan Martynov",
-  "license": "MIT",
-  "devDependencies": {
-    "@types/jest": "^26.0.23",
-    "@types/pixi.js": "^5.0.0",
-    "@typescript-eslint/eslint-plugin": "^4.26.1",
-    "@typescript-eslint/parser": "^4.26.1",
-    "eslint": "^7.28.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-config-standard": "^16.0.3",
-    "eslint-plugin-import": "^2.23.4",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^5.1.0",
-    "jest": "^27.0.4",
-    "parcel-bundler": "^1.12.5",
-    "pixi.js": "^6.0.4",
-    "prettier": "2.3.1"
-  },
-  "dependencies": {
-    "pixi-particles": "^4.3.1",
-    "pixi-spine": "^3.0.4",
-    "pixi.js": "^6.0.4"
-  }
+    "scripts": {
+        "dev": "parcel ./src/index.html",
+        "build": "parcel build ./src/index.html",
+        "clean": "rimraf ./dist ./.cache"
+    },
+    "dependencies": {
+        "@types/howler": "^2.2.2",
+        "howler": "^2.2.3",
+        "http-server": "^0.12.3",
+        "parcel-bundler": "^1.12.5",
+        "pixi.js": "^6.0.4",
+        "rimraf": "^3.0.2"
+    },
+    "name": "Pong",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT",
+    "description": "Simple Ping-Pong game",
+    "author": "Ivan Martynov",
+    "devDependencies": {
+        "cssnano": "^4.1.11",
+        "postcss": "^8.2.15",
+        "typescript": "^4.3.4"
+    }
 }

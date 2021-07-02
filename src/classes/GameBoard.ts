@@ -1,5 +1,6 @@
 import { Container, Sprite, Texture } from "pixi.js";
 import { Constants } from "../helpers/Constants";
+import { SolarizedColor } from "../utils/types";
 
 export class GameBoard extends Container {
     private _background: Sprite;
@@ -7,7 +8,7 @@ export class GameBoard extends Container {
     constructor() {
         super();
         this._background = new Sprite(Texture.WHITE);
-        this._background.tint = 0x0000dd;
+        this._background.tint = SolarizedColor.BLUE;
         this._background.width = Constants.ViewWidth;
         this._background.height = Constants.ViewHeight;
         this._background.anchor.set(0.5);
@@ -17,8 +18,4 @@ export class GameBoard extends Container {
         );
         this.addChild(this._background);
     }
-
-	setCallBack(cb): void {
-		this._background.on('pointerdown', cb);
-	}
 }

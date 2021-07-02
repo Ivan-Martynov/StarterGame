@@ -1,0 +1,79 @@
+var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
+_parcelHelpers.defineInteropFlag(exports);
+_parcelHelpers.export(exports, "GameScene", function () {
+  return GameScene;
+});
+var _pixiJs = require("pixi.js");
+var _classesSceneBase = require("../classes/SceneBase");
+var _helpersConstants = require("../helpers/Constants");
+var _classesBall = require("../classes/Ball");
+var _classesPlayer = require("../classes/Player");
+var _classesGameBoard = require("../classes/GameBoard");
+var _utilsTypes = require("../utils/types");
+var _managersSceneManager = require("../managers/SceneManager");
+var _EndScene = require("./EndScene");
+var _assetsLoader = require("../assets/loader");
+class GameScene extends _classesSceneBase.SceneBase {
+  constructor() {
+    super();
+    this.resetLevel();
+  }
+  resetLevel() {
+    this._started = false;
+    this._background = new _pixiJs.Sprite(_pixiJs.Texture.WHITE);
+    this._background.tint = _utilsTypes.SolarizedColor.BASE01;
+    this._background.alpha = 0.8;
+    this._background.width = _helpersConstants.Constants.ViewWidth;
+    this._background.height = _helpersConstants.Constants.ViewHeight;
+    this._background.anchor.set(0.5);
+    this.addChild(this._background);
+    this._board = new _classesGameBoard.GameBoard();
+    this._board.interactive = true;
+    this.addChild(this._board);
+    this._leftPad = this._addPlayer(_utilsTypes.PadPosition.LEFT);
+    this._rightPad = this._addPlayer(_utilsTypes.PadPosition.RIGHT);
+    this._ball = new _classesBall.Ball(_assetsLoader.GetSprite("game_objects").texture);
+    this._ball.interactive = true;
+    this._board.on('pointerdown', this._startBallMovement, this);
+    this._board.addChild(this._ball);
+  }
+  _addPlayer(position) {
+    const player = new _classesPlayer.Player(_pixiJs.Texture.WHITE, position);
+    this._board.addChild(player);
+    this._board.addChild(player.scoreText);
+    return player;
+  }
+  _startBallMovement() {
+    this._started = true;
+  }
+  resize(isPortrait, width, height, scale) {
+    super.resize(isPortrait, width, height, scale);
+    const w = this.bottomRight.x - this.topLeft.x;
+    const h = this.bottomRight.y - this.topLeft.y;
+    this._background.width = w;
+    this._background.height = h;
+    const middleX = w / 2;
+    const middleY = h / 2;
+    this._background.position.set(middleX, middleY);
+    this._board.position.set(middleX - this._board.width / 2, middleY - this._board.height / 2);
+  }
+  update(dt) {
+    if (!this._started) {
+      return;
+    }
+    this._ball.move(dt);
+    this.checkCollisions();
+  }
+  checkCollisions() {
+    this._ball.collisionWithFloorAndCeiling();
+    if (this._ball.passedPad(this._leftPad, this._rightPad)) {
+      this._started = false;
+      if (this._leftPad.isWinner() || this._rightPad.isWinner()) {
+        this.gameOver();
+      }
+    }
+  }
+  gameOver() {
+    _managersSceneManager.SceneManager.switchToScene(new _EndScene.EndScene());
+  }
+}

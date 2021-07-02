@@ -1,0 +1,64 @@
+var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
+_parcelHelpers.defineInteropFlag(exports);
+_parcelHelpers.export(exports, "Player", function () {
+  return Player;
+});
+var _pixiJs = require("pixi.js");
+var _helpersConstants = require("../helpers/Constants");
+var _utilsTypes = require("../utils/types");
+class Player extends _pixiJs.Sprite {
+  constructor(texture, position) {
+    super(texture);
+    this.width = 20;
+    this.height = 100;
+    this._score = 0;
+    this.scoreText = new _pixiJs.Text(this._score.toString(), new _pixiJs.TextStyle({
+      fontWeight: "bold",
+      fontSize: 32,
+      fill: 0xffffff
+    }));
+    this.padPosition = position;
+    this.y = (_helpersConstants.Constants.ViewHeight - this.height) * 0.5;
+    this.scoreText.y = 0;
+    switch (position) {
+      case _utilsTypes.PadPosition.LEFT:
+        this.x = 0;
+        this.scoreText.x = _helpersConstants.Constants.ViewWidth / 2 - this.scoreText.width * 2;
+        break;
+      case _utilsTypes.PadPosition.RIGHT:
+        this.x = _helpersConstants.Constants.ViewWidth - this.width;
+        this.scoreText.x = _helpersConstants.Constants.ViewWidth / 2 + this.scoreText.width;
+        break;
+      default:
+        break;
+    }
+    this.interactive = true;
+    this.on("pointerdown", this.onDragStart, this).on("pointerup", this.onDragEnd, this).on("pointerupoutside", this.onDragEnd, this).on("pointermove", this.onDragMove, this);
+  }
+  updateScore() {
+    this.scoreText.text = (++this._score).toString();
+  }
+  isWinner() {
+    return this._score >= _helpersConstants.Constants.scoreToWin;
+  }
+  onDragStart(event) {
+    this._data = event.data;
+    this._prevY = this._data.getLocalPosition(this.parent).y;
+    event.stopPropagation();
+    // avoid click event on the background
+    this.alpha = 0.9;
+    this._dragging = true;
+  }
+  onDragEnd() {
+    this.alpha = 1;
+    this._dragging = false;
+    this._data = null;
+  }
+  onDragMove() {
+    if (this._dragging) {
+      const y = this._data.getLocalPosition(this.parent).y;
+      this.y = Math.min(Math.max(0, this.y + y - this._prevY), _helpersConstants.Constants.ViewHeight - this.height);
+      this._prevY = y;
+    }
+  }
+}

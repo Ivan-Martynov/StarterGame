@@ -1,0 +1,11 @@
+var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
+_parcelHelpers.defineInteropFlag(exports);
+_parcelHelpers.export(exports, "Constants", function () {
+  return Constants;
+});
+class Constants {
+  static ViewWidth = 1280;
+  static ViewHeight = 720;
+  static deltaTime = 1 / 60;
+  static scoreToWin = 3;
+}
