@@ -5,12 +5,11 @@ import { SceneManager } from "../managers/SceneManager";
 import { GameScene } from "./GameScene";
 import { SolarizedColor } from "../utils/types";
 import buttonImage from "../assets/images/gui_objects/button_simple.png";
+import { Button } from "../classes/Button";
 
 export class MenuScene extends SceneBase {
 	private _background: PIXI.Sprite;
-	private _buttonContainer: PIXI.Container;
-	private _box: PIXI.Sprite;
-	private _text: PIXI.Text;
+	private _startButton: Button;
 
 	constructor() {
 		super();
@@ -25,26 +24,19 @@ export class MenuScene extends SceneBase {
 	}
 
 	private _createButton(): void {
-		this._buttonContainer = new PIXI.Container();
-		this._buttonContainer.position.set(Constants.ViewWidth / 2, Constants.ViewHeight / 2);
-		this.addChild(this._buttonContainer);
+		this._startButton = new Button(PIXI.Texture.from(buttonImage));
+		this._startButton.sprite.on('pointerdown', this._switchToScene);
+		this.addChild(this._startButton);
 
-		this._box = PIXI.Sprite.from(buttonImage);
-		this._box.anchor.set(0.5);
-		this._box.interactive = true;
-		this._box.buttonMode = true;
-		this._box.on('pointerdown', this._switchToScene);
-		this._buttonContainer.addChild(this._box);
-
-		this._text = new PIXI.Text('Start',
+		const text = new PIXI.Text('Start',
 			new PIXI.TextStyle({
 				fontWeight: 'bold',
 				fontSize: 36,
 				fill: SolarizedColor.BASE00
 			})
 		);
-		this._text.anchor.set(0.5);
-		this._buttonContainer.addChild(this._text);
+		text.anchor.set(0.5);
+		this._startButton.addChild(text);
 	}
 
 	load(): void {
@@ -65,6 +57,7 @@ export class MenuScene extends SceneBase {
 
 		this._background.width = w;
 		this._background.height = h;
-		this._buttonContainer.position.set(middleX, middleY);
+
+		this._startButton.position.set(middleX, middleY);
 	}
 }

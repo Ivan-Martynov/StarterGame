@@ -9,8 +9,12 @@ export class GameController {
 
     private _gameContainer: PIXI.Container;
 
+	private _sceneManager: SceneManager;
+
     constructor(app: PIXI.Application) {
 		GameController._instance = this;
+
+		this._sceneManager = SceneManager.getInstance();
 
         this.app = app;
 
@@ -22,8 +26,6 @@ export class GameController {
 
         this._gameContainer = new PIXI.Container();
         this.app.stage.addChild(this._gameContainer);
-
-		SceneManager.getInstance();
 
 		this._startNewGame();
 	}
@@ -39,10 +41,10 @@ export class GameController {
     onResize(isPortrait: boolean, width: number, height: number, scale: number): void {
         this._gameContainer.scale.set(scale);
 
-		SceneManager.getInstance().resize(isPortrait, width, height, scale);
+		this._sceneManager.resize(isPortrait, width, height, scale);
     }
 
     update(dt: number): void {
-		SceneManager.getInstance().update(dt);
+		this._sceneManager.update(dt);
     }
 }

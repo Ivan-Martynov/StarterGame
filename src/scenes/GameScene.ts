@@ -8,6 +8,7 @@ import { PadPosition, SolarizedColor } from "../utils/types";
 import { SceneManager } from "../managers/SceneManager";
 import { EndScene } from "./EndScene";
 import ball_image from "../assets/images/game_objects/ball.png";
+import { Button } from "../classes/Button";
 
 export class GameScene extends SceneBase {
 	private _background: PIXI.Sprite;
@@ -16,15 +17,23 @@ export class GameScene extends SceneBase {
 	private _rightPad: Player;
 	private _ball: Ball;
 	private _started: boolean;
+	private _gameEnded: boolean;
+
+	private _endButton: Button;
+	private _gameEndText: PIXI.Text;
 
 	constructor() {
 		super();
 
 		this._resetLevel();
+
+		this._createButton();
+		this._createEndText();
 	}
 
 	private _resetLevel(): void {
 		this._started = false;
+		this._gameEnded = false;
 
 		this._background = new PIXI.Sprite(PIXI.Texture.WHITE);
 		this._background.tint = SolarizedColor.BASE01;
@@ -54,6 +63,38 @@ export class GameScene extends SceneBase {
 		return player;
 	}
 
+	private _createButton(): void {
+		this._endButton = new Button(PIXI.Texture.WHITE);
+		this._endButton.sprite.width = 250;
+		this._endButton.sprite.height = 50;
+		this._endButton.sprite.tint = SolarizedColor.YELLOW;
+		this._endButton.sprite.on('pointerdown', this._switchToScene);
+		this._endButton.visible = false;
+		this.addChild(this._endButton);
+
+		const text = new PIXI.Text('To end menu',
+			new PIXI.TextStyle({
+				fontWeight: 'bold',
+				fontSize: 32,
+				fill: SolarizedColor.BASE02
+			})
+		);
+		text.anchor.set(0.5);
+		this._endButton.addChild(text);
+	}
+
+	private _createEndText(): void {
+		this._gameEndText = new PIXI.Text('',
+			new PIXI.TextStyle({
+				fontWeight: 'bolder',
+				fontSize: 36,
+				fill: SolarizedColor.BASE02
+			})
+		);
+		this._gameEndText.anchor.set(0.5);
+		this.addChild(this._gameEndText);
+	}
+
 	private _startBallMovement(): void {
 		this._started = true;
 	}
@@ -71,10 +112,13 @@ export class GameScene extends SceneBase {
 		this._background.position.set(middleX, middleY);
 
 		this._board.position.set(middleX - this._board.width / 2, middleY - this._board.height / 2);
+
+		this._gameEndText.position.set(middleX, middleY - this._gameEndText.height);
+		this._endButton.position.set(middleX, middleY + this._endButton.height);
 	}
 
 	update(dt: number): void {
-		if (!this._started) {
+		if (!this._started || this._gameEnded) {
 			return;
 		}
 
@@ -89,12 +133,28 @@ export class GameScene extends SceneBase {
 		if (this._ball.passedPad(this._leftPad, this._rightPad)) {
 			this._started = false;
 			if (this._leftPad.isWinner() || this._rightPad.isWinner()) {
-				this.gameOver();
+				this._gameOver();
 			}
 		}
 	}
 
-	gameOver(): void {
+	private _gameOver(): void {
+		this._endButton.visible = true;
+
+		if (this._leftPad.isWinner()) {
+			this._gameEndText.text = "The winner is Player 1";
+		} else {
+			this._gameEndText.text = "The winner is Player 2";
+		}
+
+		this._started = false;
+		this._gameEnded = true;
+
+		this._leftPad.interactive = false;
+		this._rightPad.interactive = false;
+	}
+
+	private _switchToScene(): void {
 		SceneManager.switchToScene(new EndScene());
 	}
 }

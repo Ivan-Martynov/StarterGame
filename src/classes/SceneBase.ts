@@ -17,7 +17,6 @@ export abstract class SceneBase extends Container implements IScene {
 			screen.width, screen.height,
 			WindowHelper.getScale(screen.width, screen.height, Constants.ViewWidth, Constants.ViewHeight)
 		);
-
 	}
 	
 	start(): void {

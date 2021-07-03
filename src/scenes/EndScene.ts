@@ -1,4 +1,5 @@
 import * as PIXI from "pixi.js";
+import { Button } from "../classes/Button";
 import { GameController } from "../classes/GameController";
 import { SceneBase } from "../classes/SceneBase";
 import { Constants } from "../helpers/Constants";
@@ -6,10 +7,8 @@ import { SolarizedColor } from "../utils/types";
 
 export class EndScene extends SceneBase {
 	private _background: PIXI.Sprite;
-	private _buttonContainer: PIXI.Container;
-	private _box: PIXI.Sprite;
 	private _gameEndText: PIXI.Text;
-	private _text: PIXI.Text;
+	private _endButton: Button;
 
 	constructor() {
 		super();
@@ -34,30 +33,22 @@ export class EndScene extends SceneBase {
 	}
 
 	private _createButton(): void {
-		this._buttonContainer = new PIXI.Container();
-		this.addChild(this._buttonContainer);
+		this._endButton = new Button(PIXI.Texture.WHITE);
+		this._endButton.sprite.width = 250;
+		this._endButton.sprite.height = 50;
+		this._endButton.sprite.tint = SolarizedColor.VIOLET;
+		this._endButton.sprite.on('pointerdown', this._switchToScene);
+		this.addChild(this._endButton);
 
-		this._box = new PIXI.Sprite(PIXI.Texture.WHITE);
-		this._box.tint = SolarizedColor.VIOLET;
-		this._box.width = 250;
-		this._box.height = 50;
-		this._box.anchor.set(0.5);
-		this._box.interactive = true;
-		this._box.buttonMode = true;
-		this._box.on('pointerdown', this._switchToScene);
-		this._buttonContainer.addChild(this._box);
-
-		this._text = new PIXI.Text('To main menu',
+		const text = new PIXI.Text('To main menu',
 			new PIXI.TextStyle({
 				fontWeight: 'bold',
 				fontSize: 32,
 				fill: SolarizedColor.BASE02
 			})
 		);
-		this._text.anchor.set(0.5);
-		this._buttonContainer.addChild(this._text);
-
-		this._buttonContainer.position.set(Constants.ViewWidth / 2, Constants.ViewHeight / 2 - this._box.height);
+		text.anchor.set(0.5);
+		this._endButton.addChild(text);
 	}
 
 	load(): void {
@@ -80,6 +71,6 @@ export class EndScene extends SceneBase {
 		this._background.height = h;
 
 		this._gameEndText.position.set(middleX, middleY - this._gameEndText.height);
-		this._buttonContainer.position.set(middleX, middleY + this._box.height);
+		this._endButton.position.set(middleX, middleY + this._endButton.height);
 	}
 }
